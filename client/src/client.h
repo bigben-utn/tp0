@@ -10,6 +10,11 @@
 
 #include "utils.h"
 
+// - - - - -
+#pragma GCC diagnostic ignored "-Wuninitialized"
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+// - - - - -
 
 t_log* iniciar_logger(void);
 t_config* iniciar_config(void);
