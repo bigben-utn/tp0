@@ -20,8 +20,6 @@ int main(void)
 
 	logger = iniciar_logger();
 	log_info(logger, "Hola! Soy un log");
-	// log_info(logger, getcwd(NULL, 0));
-
 
 	/* ---------------- ARCHIVOS DE CONFIGURACION ---------------- */
 
@@ -31,15 +29,6 @@ int main(void)
 	puerto 	= config_get_string_value(config, "PUERTO");
 
 	log_info(logger, "%s", valor);
-	log_info(logger, "%s", ip);
-	log_info(logger, "%s", puerto);
-
-
-	// Usando el config creado previamente, leemos los valores del config y los 
-	// dejamos en las variables 'ip', 'puerto' y 'valor'
-
-	// Loggeamos el valor de config
-
 
 	/* ---------------- LEER DE CONSOLA ---------------- */
 
@@ -92,14 +81,21 @@ void leer_consola(t_log* logger)
 {
 	char* leido;
 
-	// La primera te la dejo de yapa
 	leido = readline("> ");
 
-	// El resto, las vamos leyendo y logueando hasta recibir un string vacío
+	while (leido != NULL && strcmp(leido, "") != 0)
+	{
+		log_info(logger, "%s", leido);
+		leido = readline("> ");
+	}
+	
+	if (leido != NULL) {
+		free(leido);
+	} else {
+		log_warning(logger, "No se leyo de la consola");
+	}
 
-
-	// ¡No te olvides de liberar las lineas antes de regresar!
-
+	//Usar [stty sane] si la consola de tipo cppdbg no muestra caracteres introducidos
 }
 
 void paquete(int conexion)
