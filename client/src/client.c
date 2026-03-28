@@ -19,7 +19,7 @@ int main(void)
 	/* ---------------- LOGGING ---------------- */
 
 	logger = iniciar_logger();
-	log_info(logger, "Hola! Soy un log");
+	log_info(logger, "Hola! Soy un grdo virgen");
 
 	/* ---------------- ARCHIVOS DE CONFIGURACION ---------------- */
 
@@ -65,11 +65,12 @@ t_log* iniciar_logger(void)
 	}
 }
 
+//HECHO
 t_config* iniciar_config(void)
 {
 	t_config* nuevo_config = config_create("cliente.config");
 	if (nuevo_config == NULL) {
-		printf("Error Config: No se encontro el archivo");
+		printf("Error Config: No se hoda encontro el archivo");
 		exit(1);
 	}
 	else {
@@ -77,6 +78,7 @@ t_config* iniciar_config(void)
 	}
 }
 
+//HECHO
 void leer_consola(t_log* logger)
 {
 	char* leido;
@@ -92,7 +94,7 @@ void leer_consola(t_log* logger)
 	if (leido != NULL) {
 		free(leido);
 	} else {
-		log_warning(logger, "No se leyo de la consola");
+		log_warning(logger, "No hoda se leyo de la consola");
 	}
 
 	//Usar [stty sane] si la consola de tipo cppdbg no muestra caracteres introducidos
