@@ -3,41 +3,39 @@
 t_log* logger;
 
 int iniciar_servidor(void)
-{
-	// Quitar esta línea cuando hayamos terminado de implementar la funcion
-	assert(!"no implementado!");
+{ 
+	int sock_esc;
 
-	int socket_servidor;
-
-	struct addrinfo hints, *servinfo, *p;
+	struct addrinfo hints, *servinfo;
 
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
 
-	getaddrinfo(NULL, PUERTO, &hints, &servinfo);
+	int err;
+	err = getaddrinfo(NULL, PUERTO, &hints, &servinfo);
 
 	// Creamos el socket de escucha del servidor
-
+	sock_esc = socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol);
 	// Asociamos el socket a un puerto
 
+	err = bind(sock_esc, servinfo->ai_addr, servinfo->ai_addrlen);
+	log_error(logger, "Numero: %i", err);
 	// Escuchamos las conexiones entrantes
+	err = listen(sock_esc, SOMAXCONN);
+	log_error(logger, "Numero: %i", err);
 
 	freeaddrinfo(servinfo);
 	log_trace(logger, "Listo para escuchar a mi cliente");
 
-	return socket_servidor;
+	return sock_esc;
 }
 
 int esperar_cliente(int socket_servidor)
 {
-	// Quitar esta línea cuando hayamos terminado de implementar la funcion
-	assert(!"no implementado!");
-
-	// Aceptamos un nuevo cliente
-	int socket_cliente;
-	log_info(logger, "Se conecto un cliente!");
+	int socket_cliente = accept(socket_servidor, NULL, NULL);
+	log_error(logger, "Numero: %i", socket_cliente);
 
 	return socket_cliente;
 }
