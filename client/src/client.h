@@ -16,10 +16,14 @@
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 // - - - - -
 
+struct config_struct {
+    char* clave;
+    char* ip;
+    char* puerto;
+};
+
 t_log* iniciar_logger(void);
-t_config* iniciar_config(void);
-void leer_consola(t_log*);
-void paquete(int);
-void terminar_programa(int, t_log*, t_config*);
+t_config* iniciar_config(struct config_struct *config_data);
+void terminar(int, t_log*, t_config*);
 
 #endif /* CLIENT_H_ */

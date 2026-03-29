@@ -1,62 +1,31 @@
 #include "client.h"
 
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-
 int main(void)
 {
-	/*---------------------------------------------------PARTE 2-------------------------------------------------------------*/
+	struct config_struct config_data;
+	
+	t_log* logger = iniciar_logger();
+	t_config* config = iniciar_config(&config_data);
 
-	int conexion;
-	char* ip;
-	char* puerto;
-	char* valor;
+	int socket_fd = crear_conexion(config_data.ip, config_data.puerto);
 
-	t_log* logger;
-	t_config* config;
+	char* line = readline("> ");
+	while (strcmp(line, "") != 0) {
+		log_info(logger, "Recibido el mensaje -> \"%s\"", line);
+		enviar_mensaje(line, socket_fd);
 
-	/* ---------------- LOGGING ---------------- */
+		line = readline("> ");
+	}
+	free(line);
 
-	logger = iniciar_logger();
-	log_info(logger, "Hola! Soy un grdo virgen");
-
-	/* ---------------- ARCHIVOS DE CONFIGURACION ---------------- */
-
-	config = iniciar_config();
-	valor 	= config_get_string_value(config, "CLAVE");
-	ip 		= config_get_string_value(config, "IP");
-	puerto 	= config_get_string_value(config, "PUERTO");
-
-	log_info(logger, "%s", valor);
-
-	/* ---------------- LEER DE CONSOLA ---------------- */
-
-	//leer_consola(logger);
-
-	/*---------------------------------------------------PARTE 3-------------------------------------------------------------*/
-
-	// ADVERTENCIA: Antes de continuar, tenemos que asegurarnos que el servidor esté corriendo para poder conectarnos a él
-
-	// Creamos una conexión hacia el servidor
-	conexion = crear_conexion(ip, puerto);
-
-	// Enviamos al servidor el valor de CLAVE como mensaje
-	enviar_mensaje(valor, conexion);
-
-	// Armamos y enviamos el paquete
-	paquete(conexion);
-
-	terminar_programa(conexion, logger, config);
-
-	/*---------------------------------------------------PARTE 5-------------------------------------------------------------*/
-	// Proximamente
+	terminar(socket_fd, logger, config);
 }
 
-//HECHO
+// - - -
+
 t_log* iniciar_logger(void)
 {
-	t_log* nuevo_logger = log_create("tp0.log", "Trabajo Practico 0", 0, LOG_LEVEL_INFO);
+	t_log* nuevo_logger = log_create("cliente.log", "Cliente TP0", 1, LOG_LEVEL_INFO);
 	if (nuevo_logger == NULL) {
 		printf("Error Logger: Fallo su creacion");
 		exit(1);
@@ -66,66 +35,24 @@ t_log* iniciar_logger(void)
 	}
 }
 
-//HECHO
-t_config* iniciar_config(void)
+t_config* iniciar_config(struct config_struct *config_data)
 {
 	t_config* nuevo_config = config_create("cliente.config");
 	if (nuevo_config == NULL) {
-		printf("Error Config: No se hoda encontro el archivo");
+		printf("Error Config: No se encontro el archivo");
 		exit(1);
 	}
 	else {
+		config_data->clave = config_get_string_value(nuevo_config, "CLAVE");
+		config_data->ip = config_get_string_value(nuevo_config, "IP");
+		config_data->puerto = config_get_string_value(nuevo_config, "PUERTO");
 		return nuevo_config;
 	}
 }
 
-//HECHO
-void leer_consola(t_log* logger)
+void terminar(int conexion, t_log* logger, t_config* config)
 {
-	char* leido;
-
-	leido = readline("> ");
-
-	while (leido != NULL && strcmp(leido, "") != 0)
-	{
-		log_info(logger, "%s", leido);
-		leido = readline("> ");
-	}
-	
-	if (leido != NULL) {
-		free(leido);
-	} else {
-		log_warning(logger, "No hoda se leyo de la consola");
-	}
-
-	//Usar [stty sane] si la consola de tipo cppdbg no muestra caracteres introducidos
-}
-
-void paquete(int conexion)
-{
-	char* buffer = "STARTING";
-	while (strcmp(buffer, "") != 0)
-	{
-		buffer = readline("> ");
-		
-		t_paquete *pack = crear_paquete();
-		
-		// Leemos y esta vez agregamos las lineas al paquete
-		agregar_a_paquete(pack, buffer, strlen(buffer));
-		
-		enviar_paquete(pack, conexion);
-		
-		// ¡No te olvides de liberar las líneas y el paquete antes de regresar!
-		eliminar_paquete(pack);
-	}
-}
-
-//PARCIAL: HECHO LOGGER, CONFIG
-void terminar_programa(int conexion, t_log* logger, t_config* config)
-{
-	log_info(logger, "trolita");
-	log_destroy(logger);
-	config_destroy(config);
-	/* Y por ultimo, hay que liberar lo que utilizamos (conexion, log y config) 
-	  con las funciones de las commons y del TP mencionadas en el enunciado */
+	if (conexion != -1) { liberar_conexion(conexion); }
+	if (logger != NULL) { log_destroy(logger); }
+	if (config != NULL) { config_destroy(config); }
 }
