@@ -11,7 +11,6 @@ int main(void)
 
 	char* line = readline("> ");
 	while (strcmp(line, "") != 0) {
-		log_info(logger, "Recibido el mensaje -> \"%s\"", line);
 		enviar_mensaje(line, socket_fd);
 
 		line = readline("> ");

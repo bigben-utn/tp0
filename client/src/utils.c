@@ -1,18 +1,20 @@
 #include "utils.h"
 
-void* serializar_paquete(t_paquete* paquete, int bytes)	//Retorna la full info a enviar
+void* serializar_paquete(t_paquete* paquete, int bytes)
 {
 	void * magic = malloc(bytes);
 	int desplazamiento = 0;
 
 	memcpy(magic + desplazamiento, &(paquete->codigo_operacion), sizeof(int));
-	desplazamiento+= sizeof(int);
-	memcpy(magic + desplazamiento, &(paquete->buffer->size), sizeof(int));
-	desplazamiento+= sizeof(int);
-	memcpy(magic + desplazamiento, paquete->buffer->stream, paquete->buffer->size);
-	desplazamiento+= paquete->buffer->size;	//Actualización cosmética (incremento inútil)
+	desplazamiento += sizeof(int);
 
-	return magic;	//[cod_op] [tamaño buffer (stream + size_stream)] [stream]
+	memcpy(magic + desplazamiento, &(paquete->buffer->size), sizeof(int));
+	desplazamiento += sizeof(int);
+
+	memcpy(magic + desplazamiento, paquete->buffer->stream, paquete->buffer->size);
+	desplazamiento += paquete->buffer->size;
+
+	return magic;
 }
 
 int crear_conexion(char *ip, char* puerto)
@@ -25,7 +27,7 @@ int crear_conexion(char *ip, char* puerto)
 	hints.ai_flags = AI_PASSIVE;
 	// - - -
 	struct addrinfo *server_info;
-	getaddrinfo(ip, puerto, &hints, &server_info);	//Inicializa server_info con muchos parametros
+	getaddrinfo(ip, puerto, &hints, &server_info);	//Inicializa lista enlazada con varios potenciales objetos de tipo addrinfo (usa malloc)
 	// - - -
 	int socket_cliente = socket(server_info->ai_family, server_info->ai_socktype, server_info->ai_protocol);	//Socket genérico
 	connect(socket_cliente, server_info->ai_addr, server_info->ai_addrlen);										//Socket funcional
