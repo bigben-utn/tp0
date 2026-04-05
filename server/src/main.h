@@ -14,5 +14,6 @@
 
 int iniciar_socket(const char* puerto);
 void terminar_socket(int socket_fd);
+int handshake(int conexion_fd)
 
 #endif
