@@ -9,5 +9,9 @@
 #include <commons/error.h>      //error show
 
 int iniciar_socket(const char* servidor_ip, const char* servidor_puerto);
+void terminar_socket(int socket_fd);
+
+void handshake(int socket_fd);
+
 
 #endif

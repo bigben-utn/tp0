@@ -7,7 +7,14 @@ t_config* config;
 int main() {
     iniciar_programa();
 
-    iniciar_socket("192.168.1.68", "4444");
+    int socket_fd = iniciar_socket("192.168.1.68", "4444");
+    
+    if (handshake(socket_fd) == 0) {
+        log_info(logger, "Conexion establecida con IP: %s", "192.168.1.68");
+    } else {
+        log_info(logger, "No se pudo establecer la conexion con la IP: %s", "192.168.1.68");
+        return 0;
+    }
 
     terminar_programa();
     return 0;

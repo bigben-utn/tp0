@@ -39,3 +39,18 @@ int iniciar_socket(const char* servidor_ip, const char* servidor_puerto) {
     freeaddrinfo(server_info);
     return socket_fd;
 }
+
+void terminar_socket(int socket_fd) {
+    shutdown(socket_fd, SHUT_RDWR);
+    close(socket_fd);
+}
+
+int handshake(int socket_fd) {
+    int32_t myID = 6037;
+    int32_t result;
+
+    send(socket_fd, &myID, sizeof(int32_t), 0);
+    recv(socket_fd, &result, sizeof(int32_t), MSG_WAITALL);
+
+    return result;
+}

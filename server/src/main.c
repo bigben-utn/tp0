@@ -6,11 +6,29 @@ int main() {
 
     int conexion_fd = accept(socket_fd, NULL, NULL);
 
+    handshake(conexion_fd);
 
 
     terminar_socket(conexion_fd);
     terminar_socket(socket_fd);
     return 0;
+}
+
+int handshake(int conexion_fd) {
+    int32_t id_cliente;
+    int32_t result;
+
+    recv(conexion_fd, &id_cliente, sizeof(int32_t), MSG_WAITALL);
+
+    if (id_cliente == 6037) {
+        result = 0;
+    } else {
+        result = -1;
+    }
+
+    send(conexion_fd, &result, sizeof(int32_t), 0);
+
+    return result;
 }
 
 int iniciar_socket(const char* puerto) {

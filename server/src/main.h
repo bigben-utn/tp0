@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>             //memset
 #include <sys/types.h>
-#include <sys/socket.h>         //socket(), bind(), listen(), shutdown()
+#include <sys/socket.h>         //socket(), bind(), listen(), shutdown(), send(), recv(), MSG_WAITALL
 #include <netdb.h>
 #include <commons/error.h>      //error show
 #include <unistd.h>             //close()
