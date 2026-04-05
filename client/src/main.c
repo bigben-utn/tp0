@@ -1,4 +1,5 @@
 #include "main.h"
+#include "utils.h"
 
 t_log* logger;
 t_config* config;
@@ -6,6 +7,7 @@ t_config* config;
 int main() {
     iniciar_programa();
 
+    conectar("132", "4444");
 
     terminar_programa();
     return 0;
