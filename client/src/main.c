@@ -7,7 +7,7 @@ t_config* config;
 int main() {
     iniciar_programa();
 
-    conectar("132", "4444");
+    iniciar_socket("192.168.1.68", "4444");
 
     terminar_programa();
     return 0;
